@@ -81,13 +81,9 @@ No Windows, use o wrapper Maven incluído:
 
 ### A partir do Release
 
-1. Acesse a página de [Releases](../../releases) do projeto.
-2. Baixe o arquivo `.jar` mais recente disponível.
-3. Execute o arquivo baixado usando o comando:
-
-```bash
-java -jar MInhas_Contas-1.0-SNAPSHOT.jar
-```
+1. Vá em Releases no lado direito da página deste repositório.
+2. Baixe o arquivo `.exe` mais recente disponível.
+3. Dê um duplo clique no aruivo .exe.
 
 No Windows, também é possível executar clicando duas vezes no arquivo `.jar`, desde que o Java esteja corretamente configurado no sistema.
 
