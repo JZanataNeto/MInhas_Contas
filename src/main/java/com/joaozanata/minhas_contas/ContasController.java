@@ -1,12 +1,12 @@
 package com.joaozanata.minhas_contas;
 
-import java.net.URL;
+import java.net.URL; // representa e manipula um endereço na internet
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZoneId; //identifica e representa o fuso horário
 import java.util.Date;
-import java.util.ResourceBundle;
-
+import java.util.ResourceBundle; // isola elementos específicos do idioma
+// sincroniza as propriedades de 2 objetos sem precisar codar listeners
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,6 +43,8 @@ public class ContasController implements Initializable{
 
     private ContasService service;
 
+    // configura componentes visuais: popula a tabela, define textos iniciais e estilos, adiciona os listeners que monitoram
+    // desde o início e faz chamadas ao arquivo CSV exibir assim que a janela abre
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         service = ContasService.getNewInstance();
@@ -51,6 +53,7 @@ public class ContasController implements Initializable{
         atualizaDadosTabela();
     }
 
+    // métodos chamados ao clicar nos botões
     public void salvar() {
         Conta c = new Conta();
         pegaValores(c);
@@ -75,44 +78,48 @@ public class ContasController implements Initializable{
         txtDesc.setText("");
         dpVencimento.setValue(null);
     }
+    // adiciona os valores digitados pelo usuário ao objeto conta
     private void pegaValores(Conta c) {
         c.setConcessionaria(txtConsc.getText());
         c.setDescricao(txtDesc.getText());
         c.setDataVencimento(dataSelecionada());
     }
+    // obtem a data selecionada e devolve a data com horário
     private Date dataSelecionada() {
         LocalDateTime time = dpVencimento.getValue().atStartOfDay();
         return Date.from(time.atZone(ZoneId.systemDefault()).toInstant());
     }
+    // atualiza os dados da tabela e limpa os textFields
     private void atualizaDadosTabela() {
         tblContas.getItems().setAll(service.buscarTodas());
         limpar();
     }
+    // extrai propriedades do objeto para exibir nas células da tabela
     private void configuraColunas() {
         clConsc.setCellValueFactory(new PropertyValueFactory<>("concessionaria"));
         clDesc.setCellValueFactory(new PropertyValueFactory<>("descricao"));
         clVenc.setCellValueFactory(new PropertyValueFactory<>("dataVencimento"));
     }
+    // lógica da tela
     private void configuraBindings() {
-        // esse binding só e false quando os campos da tela estão preenchidos
+        // é false quando os campos da tela estão preenchidos
         BooleanBinding camposPreenchidos = txtConsc.textProperty().isEmpty()
                 .or(txtDesc.textProperty().isEmpty())
                 .or(dpVencimento.valueProperty().isNull());
-        // indica se há algo selecionado na tabela
+        // é false há algo selecionado na tabela
         BooleanBinding algoSelecionado = tblContas.getSelectionModel().selectedItemProperty().isNull();
-        // alguns botões só são habilitados se algo foi selecionado na tabela
+        // habilita os botões abaixo se algo foi selecionado na lista da tabela
         btnApagar.disableProperty().bind(algoSelecionado);
         btnAtualizar.disableProperty().bind(algoSelecionado);
         btnLimpart.disableProperty().bind(algoSelecionado);
-        // o botão salvar só é habilitado se as informações foram preenchidas e não tem nada na tela
+        // botão salvar é habilitado se houve seleção e os campos foram preenchidos
         btnSalvar.disableProperty().bind(algoSelecionado.not().or(camposPreenchidos));
-        // quando algo é selecionado na tabela, preenchemos os campos de entrada com os valores para o
-        // usuário editar
+        // quando algo é selecionado na tabela, exibe nos campos os valores atuais para a edição do usuário
+        // 'o' é o valor antigo e 'n' é o novo valor
         tblContas.getSelectionModel().selectedItemProperty().addListener((b, o, n) -> {
             if (n != null) {
                 LocalDate data = null;
-                data = n.getDataVencimento().toInstant()
-                        .atZone(ZoneId.systemDefault()).toLocalDate();
+                data = n.getDataVencimento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 txtConsc.setText(n.getConcessionaria());
                 txtDesc.setText(n.getDescricao());
                 dpVencimento.setValue(data);

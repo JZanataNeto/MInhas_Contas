@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
+// tratamento do arquivo CSV
 public class ContasCSVService implements ContasService{
     private static final String SEPARADOR = ";";
     private static final Path ARQUIVO_SAIDA = Paths.get("./dados.csv");
@@ -49,6 +49,9 @@ public class ContasCSVService implements ContasService{
         return contas.stream().filter(c -> c.getId() == id).findFirst()
                 .orElseThrow(() -> new Error("Conta não encontrada"));
     }
+    // salva os dados no arquivo, gerando novo CSV
+    // a classe StringBuffer permite alterar, adicionar, inserir, apagar ou inverter o texto
+    // no mesmo objeto, economizando recurso de memória
     private void salvaDados() {
         StringBuffer sb = new StringBuffer();
         for (Conta c : contas) {
@@ -78,6 +81,7 @@ public class ContasCSVService implements ContasService{
             System.exit(0);
         }
     }
+    // transforma a linha CSV para o objeto conta
     private Conta leLinha(String linha) {
         String colunas[] = linha.split(SEPARADOR);
         int id = Integer.parseInt(colunas[0]);
@@ -95,6 +99,7 @@ public class ContasCSVService implements ContasService{
         conta.setDataVencimento(dataVencimento);
         return conta;
     }
+    // transforma um objeto conta em um arquivo CSV
     private String criaLinha(Conta c) {
         String dataStr = formatoData.format(c.getDataVencimento());
         String idStr = String.valueOf(c.getId());

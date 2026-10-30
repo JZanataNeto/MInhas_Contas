@@ -2,6 +2,7 @@ package com.joaozanata.minhas_contas;
 
 import java.util.Date;
 
+// classe modelo do objeto
 public class Conta {
     private int id;
     private String concessionaria;

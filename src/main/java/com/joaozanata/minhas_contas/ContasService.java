@@ -8,6 +8,7 @@ public interface ContasService {
     public void apagar(int id);
     public void atualizar(Conta conta);
 
+    // retorna a implementação ContasCSVService
     public static ContasService getNewInstance() {
         return new ContasCSVService();
     }
