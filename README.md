@@ -83,7 +83,7 @@ No Windows, use o wrapper Maven incluído:
 
 1. Vá em Releases no lado direito da página deste repositório.
 2. Baixe o arquivo `.exe` mais recente disponível.
-3. Dê um duplo clique no aruivo .exe.
+3. Dê um duplo clique no arquivo .exe.
 
 No Windows, também é possível executar clicando duas vezes no arquivo `.jar`, desde que o Java esteja corretamente configurado no sistema.
 
