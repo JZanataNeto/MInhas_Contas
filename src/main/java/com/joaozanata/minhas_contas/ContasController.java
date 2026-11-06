@@ -4,43 +4,30 @@ import java.net.URL; // representa e manipula um endereço na internet
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId; //identifica e representa o fuso horário
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.ResourceBundle; // isola elementos específicos do idioma
 // sincroniza as propriedades de 2 objetos sem precisar codar listeners
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ContasController implements Initializable{
-    @FXML
-    private TableView<Conta> tblContas;
-    @FXML
-    private TableColumn<Conta, String> clConsc;
-    @FXML
-    private TableColumn<Conta, String> clDesc;
-    @FXML
-    private TableColumn<Conta, Date> clVenc;
-    @FXML
-    private TextField txtConsc;
-    @FXML
-    private TextField txtDesc;
-    @FXML
-    private DatePicker dpVencimento;
-    @FXML
-    private Button btnSalvar;
-    @FXML
-    private Button btnAtualizar;
-    @FXML
-    private Button btnApagar;
-    @FXML
-    private Button btnLimpart;
+    @FXML private TableView<Conta> tblContas;
+    @FXML private TableColumn<Conta, String> clConsc;
+    @FXML private TableColumn<Conta, String> clDesc;
+    @FXML private TableColumn<Conta, Date> clVenc;
+    @FXML private TextField txtConsc;
+    @FXML private TextField txtDesc;
+    @FXML private DatePicker dpVencimento;
+    @FXML private Button btnSalvar;
+    @FXML private Button btnAtualizar;
+    @FXML private Button btnApagar;
+    @FXML private Button btnLimpart;
 
+    private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private ContasService service;
 
     // configura componentes visuais: popula a tabela, define textos iniciais e estilos, adiciona os listeners que monitoram
@@ -99,6 +86,13 @@ public class ContasController implements Initializable{
         clConsc.setCellValueFactory(new PropertyValueFactory<>("concessionaria"));
         clDesc.setCellValueFactory(new PropertyValueFactory<>("descricao"));
         clVenc.setCellValueFactory(new PropertyValueFactory<>("dataVencimento"));
+        clVenc.setCellFactory(coluna -> new TableCell<>() {
+            @Override
+            protected void updateItem(Date data, boolean empty) {
+                super.updateItem(data, empty);
+                setText(empty || data == null ? null : data.toInstant().atZone(ZoneId.systemDefault()).format(FORMATO_DATA));
+            }
+        });
     }
     // lógica da tela
     private void configuraBindings() {
